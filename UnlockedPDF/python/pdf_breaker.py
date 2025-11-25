@@ -10,7 +10,7 @@ WORDLIST = "custom_wordlist.txt"     # Nome da sua wordlist
 
 def testar_senha(args):
     """
-    Função Worker que será xecutada em paralelo por cada núcleo da CPU.
+    Função Worker que será executada em paralelo por cada núcleo da CPU.
     Recebe o caminho do arquivo e a senha da wordlist a ser testada.
     """
     arquivo_pdf, senha = args
@@ -21,9 +21,6 @@ def testar_senha(args):
             return senha 
     except pikepdf.PasswordError:
         # Senha incorreta, segue o jogo
-        return None
-    except Exception as e:
-        # Ignora arquivos corrompidos ou erros de leitura
         return None
 
 def carregar_wordlist(caminho_wordlist):
