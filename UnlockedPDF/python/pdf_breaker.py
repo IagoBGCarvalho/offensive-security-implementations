@@ -1,8 +1,14 @@
-from multiprocessing import Pool, cpu_count, Manager
 import sys
 import time
 import os
+import multiprocessing
+from multiprocessing import Pool, cpu_count
 import pikepdf
+
+try:
+    multiprocessing.set_start_method('spawn') # Altera o método de inicialização do multiprocessing para spawn, que é mais seguro e compatível com libs C++
+except RuntimeError:
+    pass
 
 # CONFIGURAÇÕES
 PDF_ALVO = "teste_protegido.pdf"      # Nome do arquivo PDF alvo
@@ -16,9 +22,9 @@ def testar_senha(args):
     arquivo_pdf, senha = args
     try:
         # Tenta abrir o PDF com a senha fornecida
-        with pikepdf.open(arquivo_pdf, password=senha) as pdf: # pikepdf.open faz a validação matemática do hash internamente, testando a senha fornecida para o arquivo alvo
+        with pikepdf.open(arquivo_pdf, password=senha): # pikepdf.open faz a validação matemática do hash internamente, testando a senha fornecida para o arquivo alvo
             # Se não der erro, a senha está correta, então é retornada
-            return senha 
+            return senha
     except pikepdf.PasswordError:
         # Senha incorreta, segue o jogo
         return None
@@ -67,7 +73,7 @@ def main():
         print(f"\n Senha encontrada: {senha_encontrada}")
         print(f"[*] Tempo decorrido: {fim - inicio:.2f} segundos")
     else:
-        print(f"\n[FALHA] A senha não está na wordlist fornecida.")
+        print("\n[FALHA] A senha não está na wordlist fornecida.")
 
 if __name__ == "__main__":
     main()
